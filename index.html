@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chango&family=Fascinate&family=Fascinate+Inline&family=Montserrat:wght@200&family=Oleo+Script+Swash+Caps:wght@700&family=Ubuntu:ital,wght@0,300;1,300;1,700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- <form method="post" enctype="multipart/form-data" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Submit">
+    </form> -->
+    <div class="header">
+        <h1 class="title">Food Classifier</h1>
+        <!-- <p class="disclaimer">only works with pizza, hamburgers and hotdogs</p> -->
+    </div>
+    <div class="center">
+        <div class="form-input">
+            <div class="preview">
+                <img id="imgPreview"
+                    src="https://media2.giphy.com/media/Ars2rPVrIBOBJwCOts/giphy.gif?cid=6c09b9523d18bbe1829aa153351ec17d3343a54c623c98b2&rid=giphy.gif&ct=s"
+                    alt="your image" />
+            </div>
+            <label for="imgInp" class="">Select Image</label>
+            <input id="imgInp" class="myButton" type="file" name="file" style="visibility: hidden;"
+                onchange="showPreview(event)" />
+        </div>
+    </div>
+    <div class="upload">
+        <button class="button-55" role="button" onclick="doupload()" name="submit">Upload File</button>
+    </div>
+    <p id="result"></p>
+
+
+
+    <script>
+        function showPreview(event) {
+            var preview = document.getElementById("imgPreview");
+            if (event.target.files.length > 0) {
+                var src = URL.createObjectURL(event.target.files[0]);
+                preview.src = src;
+            } else {
+                preview.src = "https://media2.giphy.com/media/Ars2rPVrIBOBJwCOts/giphy.gif?cid=6c09b9523d18bbe1829aa153351ec17d3343a54c623c98b2&rid=giphy.gif&ct=s";
+            }
+            preview.style.display = "block";
+
+        }
+
+        async function doupload() {
+            console.log(document.getElementById("imgInp"));
+            let data = document.getElementById("imgInp").files[0];
+            let entry = document.getElementById("imgInp").files[0];
+            formData = new FormData();
+            formData.append("file", data);
+            console.log('doupload', entry, data)
+            let result = await fetch('/upload', {
+                method: 'POST', body: formData, headers: {
+                    'enctype': 'multipart/form-data'
+                }
+            });
+
+            result.json().then((prediction) => {
+                console.log(prediction);
+                var text = prediction.accuracy + "% " + prediction.label;
+                var p = document.getElementById('result');
+                p.innerHTML = text;
+            });
+        };
+    </script>
+</body>
+</html>
